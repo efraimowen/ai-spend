@@ -11,30 +11,32 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.69",
     "@ai-sdk/google": "^3.0.62",
-    "@ai-sdk/groq": "^3.0.35",
+    "@ai-sdk/groq": "^3.0.39",
     "@ai-sdk/react": "^3.0.161",
     "@radix-ui/react-slot": "^1.2.4",
+    "@supabase/supabase-js": "^2.106.2",
     "@tailwindcss/postcss": "^4.2.2",
-    "ai": "^6.0.159",
+    "ai": "^6.0.193",
     "autoprefixer": "^10.4.27",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.454.0",
-    "next": "^15.5.15",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "next": "^15.5.18",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "recharts": "^3.8.1",
     "swr": "^2.4.1",
     "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/node": "^20.19.41",
+    "@types/react": "^18.3.29",
+    "@types/react-dom": "^18.3.7",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "postcss": "^8.5.9",
     "tailwindcss": "3.4",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }
