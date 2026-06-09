@@ -84,10 +84,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - [x] Chat box UI (ChatGPT-style input)
 - [x] AI integration — natural language → structured JSON
 - [x] Real-time streaming responses
-- [ ] Supabase integration — persist transactions
-- [ ] Spending charts (Recharts — pie/bar by category)
-- [ ] Budget alert — visual warning when spending exceeds limit
-- [ ] Mobile responsiveness polish
+- [x] Supabase integration — persist transactions
+- [x] Spending charts (Recharts — pie/bar by category)
+- [x] Budget alert — visual warning when spending exceeds limit
+- [x] Mobile responsiveness polish
 
 ---
 
