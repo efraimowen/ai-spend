@@ -24,18 +24,46 @@ This project also became my **re-entry into software engineering** after a caree
 ### Live Now ✅
 - **Natural language input** — type expenses the way you'd text a friend
 - **AI-powered extraction** — Groq's Llama 3.3 converts free text into structured data (item, cost, category) **in real-time**
-- **Streaming UI** — responses stream instantly using Vercel AI SDK, no loading spinners
 - **Persistent storage** — transactions saved to Supabase PostgreSQL
 - **Financial dashboard** — total spending, AI insights by category, budget overview
-- **Visual analytics** — Recharts visualization of spending distribution by category
-- **Smart alerts** — visual budget warnings (75% threshold) and danger indicators (over budget)
+- **Visual analytics** — Interactive pie chart with toggleable legend for spending distribution by category
+- **Smart alerts** — Budget warning at 75% usage with animated progress bar and visual indicators
+- **Responsive design** — Dedicated mobile navigation (MobileNav) and desktop sidebar (SideBar)
 - **Transaction history** — complete log of all expenses with edit/delete capability
 - **Real-time sync** — UI updates instantly when data saved to database
 
 ### In Progress 🚧
-- Enhanced navigation (SideBar, MobileNav components)
-- Alternative dashboard layouts (page_fase2.tsx)
-- Additional chart visualizations (SpendingChart_DoubleChart)
+- **Streaming UI on frontend** — Implement real-time response streaming with useCompletion hook
+- **Auto-expanding chat input** — TextArea that grows downward (like WhatsApp) instead of scrolling horizontally
+- **Authentication system** — User login & registration with Supabase Auth
+- **Advanced analytics and insights** — Spending trends and category breakdown analysis
+
+---
+
+## 🧩 Component Architecture
+
+### Navigation
+- **SideBar.tsx** — Full-featured navigation for desktop viewports with budget overview
+- **MobileNav.tsx** — Compact navigation optimized for mobile devices
+- Automatically switches based on screen size using Tailwind responsive classes
+
+### Dashboard Components
+- **BudgetAlert.tsx** — Real-time budget status with:
+  - Warning indicator at 75% budget usage
+  - Animated gradient progress bar
+  - Percentage display with danger state
+- **SpendingChart.tsx** — Interactive visualization with:
+  - Pie chart for category breakdown
+  - Toggleable legend (show/hide categories)
+  - Separate rendering logic for mobile and desktop views
+  - Future-proof structure for settings-based chart selection
+- **TransactionList.tsx** — Expense history with CRUD operations
+
+### Chat Interface (In Progress)
+- Auto-expanding textarea input
+- Real-time streaming response from Groq API
+- Display extracted transaction data before database save
+- Error handling and retry logic
 
 ---
 
@@ -112,9 +140,11 @@ smartspend/
 │   └── page.tsx                      # Dashboard & chat interface
 │
 ├── components/
-│   ├── BudgetAlert.tsx               # Budget status display
-│   ├── SpendingChart.tsx             # Recharts visualization
+│   ├── BudgetAlert.tsx               # Budget status with alerts & progress bar
+│   ├── SpendingChart.tsx             # Pie chart with toggleable legend
 │   ├── TransactionList.tsx           # Expense history table
+│   ├── SideBar.tsx                   # Desktop navigation (NEW)
+│   ├── MobileNav.tsx                 # Mobile navigation (NEW)
 │   └── ui/                           # Shadcn components
 │       ├── button.tsx
 │       ├── card.tsx
