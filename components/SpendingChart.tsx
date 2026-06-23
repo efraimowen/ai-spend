@@ -149,12 +149,11 @@ function MobileLayout({
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: number) =>
+              formatter={(value) =>
                 new Intl.NumberFormat('id-ID', {
                   style: 'currency',
                   currency: 'IDR',
-                  maximumFractionDigits: 0,
-                }).format(value)
+                }).format(Number(value || 0))
               }
               contentStyle={{
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -265,12 +264,11 @@ function DesktopLayout({
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: number) =>
+              formatter={(value) =>
                 new Intl.NumberFormat('id-ID', {
                   style: 'currency',
                   currency: 'IDR',
-                  maximumFractionDigits: 0,
-                }).format(value)
+                }).format(Number(value || 0))
               }
               contentStyle={{
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
