@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import MobileNav from '@/components/MobileNav'
+import SideBar from '@/components/SideBar'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +11,7 @@ import BudgetAlert from "@/components/BudgetAlert";
 import TransactionList from "@/components/TransactionList";
 import { Transaction } from "@/lib/supabase";
 
-const BUDGET_LIMIT = 5_000_000;
+const BUDGET_LIMIT = 5_000_000; //For 
 
 export default function Home() {
     const [input, setInput] = useState("");
@@ -20,7 +22,7 @@ export default function Home() {
     const [preview, setPreview] = useState<Transaction[]>([]);
     const [dbError, setDbError] = useState<string | null>(null);
 
-    // ✅ FASE 3: Load transaksi dari Supabase saat pertama buka
+    // Load transaksi dari Supabase saat pertama buka
     useEffect(() => {
         fetchTransactions();
     }, []);
@@ -40,7 +42,6 @@ export default function Home() {
         .filter((t) => t.type === "expense")
         .reduce((sum, t) => sum + t.amount, 0);
 
-    const budgetLeft = Math.max(0, BUDGET_LIMIT - totalExpense);
     const isOverBudget = totalExpense > BUDGET_LIMIT;
 
     const formatIDR = (v: number) =>
@@ -96,7 +97,7 @@ export default function Home() {
             setCompletion(result);
         }
 
-        // ✅ FASE 3: Parse hasil AI jadi preview transaksi
+        // Parse hasil AI jadi preview transaksi
         const parsed = parseCompletionToPreview(result);
         setPreview(parsed);
         setInput("");
@@ -107,7 +108,7 @@ export default function Home() {
         }
     };
 
-    // ✅ FASE 3: Simpan preview ke Supabase
+    // Simpan hasil preview ke Supabase
     async function handleSave() {
         if (preview.length === 0) return;
         setIsSaving(true);
@@ -132,7 +133,7 @@ export default function Home() {
         }
     }
 
-    // ✅ FASE 3: Hapus transaksi
+    // Hapus transaksi
     async function handleDelete(id: string) {
         const res = await fetch(`/api/transactions?id=${id}`, {
         method: "DELETE",
@@ -140,7 +141,9 @@ export default function Home() {
         if (res.ok) {
             setTransactions((prev) => prev.filter((t) => t.id !== id));
         }
-    }
+    }    
+    
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     return (
     <div
@@ -148,48 +151,34 @@ export default function Home() {
         isOverBudget ? "bg-red-50" : "bg-slate-50"
         }`}
     >
-    {/* SIDEBAR */}
-    <aside className="hidden md:flex w-64 bg-white border-r flex-col p-6 space-y-8">
-        <div className="text-xl font-bold text-blue-600 flex items-center gap-2">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg" />
-        SmartSpend
-        </div>
-        <nav className="flex-1 space-y-2">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
-                Menu
-            </div>
-            <a href="#" className="flex items-center gap-3 p-3 bg-blue-50 text-blue-700 rounded-lg font-medium"> Dashboard </a>
-            <a href="#" className="flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"> History </a>
-            <a href="#" className="flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"> Settings </a>
-        </nav>
-        <div className="p-4 bg-slate-900 rounded-xl text-white text-sm">
-        <p className="font-medium">Pro Plan</p>
-        <p className="text-slate-400 text-xs mt-1">Unlock AI Insights</p>
-        </div>
-    </aside>
+    {/* MOBILENAV COMPONENT */}
+    <MobileNav isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-    {/* MAIN */}
-    <main className="flex-1 p-6 md:p-10">
+    {/* SIDEBAR COMPONENT */}
+    <SideBar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+    {/* Main */}
+    <main className="flex-1 p-6 md:p-10 pt-20 md:pt-10">
         <div className="mx-auto w-full max-w-4xl space-y-6">
 
         {/* Header */}
         <div className="flex items-center justify-between">
             <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-xl md:text-3xl font-bold tracking-tight">
                 Financial AI Dashboard 💸
             </h1>
-            <p className="text-slate-500 mt-1">
+            <p className="text-xs md:text-base text-slate-500 mt-1">
                 Track your spending with the power of AI.
             </p>
             </div>
             {isOverBudget && (
-            <span className="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full animate-pulse">
+            <span className="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-sm animate-pulse">
                 ⚠️ Over Budget!
             </span>
             )}
         </div>
 
-        {/* ✅ FASE 3: Stats Cards — data real dari Supabase */}
+        {/* Stats Cards — data real dari Supabase */}
         <div className="grid gap-4 md:grid-cols-3">
             <Card className={isOverBudget ? "border-red-300 bg-red-50" : ""}>
             <CardHeader className="pb-2">
@@ -211,7 +200,7 @@ export default function Home() {
             </CardContent>
             </Card>
 
-            <Card>
+            <Card className="md:col-span-2">
             <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium uppercase tracking-wider text-slate-500">
                 AI Insights
@@ -238,53 +227,9 @@ export default function Home() {
                 </div>
             </CardContent>
             </Card>
-
-            <Card
-            className={
-                isOverBudget
-                ? "bg-red-50 border-red-200"
-                : "bg-blue-50 border-blue-200"
-            }
-            >
-            <CardHeader className="pb-2">
-                <CardTitle
-                className={`text-sm font-medium uppercase tracking-wider ${
-                    isOverBudget ? "text-red-600" : "text-blue-600"
-                }`}
-                >
-                Budget Left
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div
-                className={`text-2xl font-bold ${
-                    isOverBudget ? "text-red-700" : "text-blue-700"
-                }`}
-                >
-                {formatIDR(budgetLeft)}
-                </div>
-                <div className="w-full bg-blue-200 rounded-full h-1.5 mt-3">
-                <div
-                    className={`h-1.5 rounded-full transition-all duration-700 ${
-                    isOverBudget ? "bg-red-500 w-full" : "bg-blue-600"
-                    }`}
-                    style={
-                    !isOverBudget
-                        ? {
-                            width: `${Math.min(
-                            (totalExpense / BUDGET_LIMIT) * 100,
-                            100
-                            )}%`,
-                        }
-                        : {}
-                    }
-                />
-                </div>
-            </CardContent>
-            </Card>
         </div>
 
-        {/* ✅ FASE 3: Budget Alert */}
+        {/* Budget Alert */}
         <BudgetAlert transactions={transactions} />
 
         {/* Chat Input */}
@@ -293,17 +238,17 @@ export default function Home() {
             <CardTitle className="text-lg">What did you buy today?</CardTitle>
             </CardHeader>
             <form onSubmit={handleSubmit}>
-            <CardContent className="flex space-x-2">
+            <CardContent className="flex flex-col md:flex-row gap-2 md:gap-3">
                 <Input
                 placeholder="e.g. Tadi makan bakso 18rb, parkir 3rb..."
-                className="flex-1 rounded-full border-slate-200 px-6"
+                className="flex-1 h-12 md:h-11 px-4 md:px-6 text-base md:text-sm rounded-lg border border-slate-200"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 />
                 <Button
                 type="submit"
                 disabled={isLoading}
-                className="rounded-full bg-blue-600 px-6 hover:bg-blue-700"
+                className="h-12 md:h-11 px-6 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium w-full md:w-auto whitespace-nowrap"
                 >
                 {isLoading ? "Analyzing..." : "Analyze with AI"}
                 </Button>
@@ -324,18 +269,15 @@ export default function Home() {
                     .split("|")
                     .map((s: string) => s.trim());
                     return (
-                    <div
-                        key={i}
-                        className="flex items-center justify-between p-3 bg-blue-50 border border-blue-100 rounded-xl"
-                    >
+                    <div key={i} className="flex items-center justify-between p-3 bg-blue-50 border border-blue-100 rounded-lg">
                         <span className="font-semibold text-slate-800">
-                        {nama}
+                            {nama}
                         </span>
-                        <span className="text-xs px-2 py-1 bg-blue-200 text-blue-700 rounded-full">
-                        {kategori}
+                        <span className="text-xs px-2 py-1 bg-blue-200 text-blue-700 rounded-lg">
+                            {kategori}
                         </span>
                         <span className="font-bold text-blue-700">
-                        Rp {Number(nominal).toLocaleString("id-ID")}
+                            Rp {Number(nominal).toLocaleString("id-ID")}
                         </span>
                     </div>
                     );
@@ -347,7 +289,7 @@ export default function Home() {
                     <Button
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="bg-green-600 hover:bg-green-700 text-white rounded-full px-5"
+                    className="bg-green-600 hover:bg-green-700 text-white rounded-lg px-5 md:flex-none flex-1"
                     >
                     {isSaving ? "Menyimpan..." : "💾 Simpan ke Database"}
                     </Button>
@@ -357,7 +299,7 @@ export default function Home() {
                         setPreview([]);
                         setCompletion("");
                     }}
-                    className="rounded-full px-5"
+                    className="rounded-lg px-5 md:flex-none flex-1"
                     >
                     Batal
                     </Button>
@@ -371,7 +313,7 @@ export default function Home() {
             )}
         </Card>
 
-        {/* ✅ FASE 3: Spending Chart */}
+        {/* Spending Chart */}
         <Card>
             <CardHeader>
             <CardTitle className="text-base">
@@ -379,20 +321,22 @@ export default function Home() {
             </CardTitle>
             </CardHeader>
             <CardContent>
-            <SpendingChart transactions={transactions} />
+                <SpendingChart transactions={transactions} />
             </CardContent>
         </Card>
 
-        {/* ✅ FASE 3: Transaction History dari Supabase */}
+        {/* Transaction History dari Supabase */}
         <Card>
             <CardHeader>
-            <CardTitle className="text-base">📋 Riwayat Transaksi</CardTitle>
+                <CardTitle className="text-base">
+                    📋 Riwayat Transaksi
+                </CardTitle>
             </CardHeader>
             <CardContent>
-            <TransactionList
-                transactions={transactions}
-                onDelete={handleDelete}
-            />
+                <TransactionList 
+                    transactions={transactions} 
+                    onDelete={handleDelete}
+                />
             </CardContent>
         </Card>
 
